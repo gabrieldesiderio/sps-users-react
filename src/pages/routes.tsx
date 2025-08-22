@@ -6,8 +6,9 @@ import { AppLayout } from './_layouts/app'
 import { DashboardLayout } from './_layouts/dashboard'
 import { SignIn } from './auth/sign-in'
 import { NotFoundPage } from './not-found'
-import { CreateUserPage } from './users/create-user'
-import { UserDetails } from './users/details'
+import { CreateUserPage } from './users/create'
+import UserDetailsPage from './users/details'
+import { EditUserPage } from './users/edit'
 import { UsersListPage } from './users/list'
 
 export function AppRoutes() {
@@ -35,7 +36,8 @@ export function AppRoutes() {
           >
             <Route element={<UsersListPage />} index />
             <Route element={<CreateUserPage />} path="create" />
-            <Route element={<UserDetails />} path=":userId/edit" />
+            <Route element={<EditUserPage />} path=":userId/edit" />
+            <Route element={<UserDetailsPage />} path=":userId" />
           </Route>
 
           <Route element={<NotFoundPage />} path="*" />
