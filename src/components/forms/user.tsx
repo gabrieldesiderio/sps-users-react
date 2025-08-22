@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
-import { Loader2, Plus } from 'lucide-react'
+import { Loader2, Save } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -17,6 +17,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { createUser } from '@/http/users/create-user'
+import { editUser } from '@/http/users/edit-user'
 import { queryClient } from '@/lib/query-client'
 import {
   Select,
@@ -35,32 +36,36 @@ const formSchema = z.object({
 
 type UserFormSchema = z.infer<typeof formSchema>
 
-export function UserForm() {
+type UserFormProps = {
+  userId?: string
+  initialValues?: Partial<UserFormSchema>
+}
+
+export function UserForm({ userId, initialValues }: UserFormProps) {
   const navigate = useNavigate()
 
   const form = useForm<UserFormSchema>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: '',
-      email: '',
-      password: '',
-      type: undefined,
-    },
+    defaultValues: initialValues,
   })
 
-  const { mutateAsync: handleCreateUser } = useMutation({
-    mutationFn: createUser,
+  const { mutateAsync: handleSaveUser } = useMutation({
+    mutationFn: userId ? editUser.bind(null, userId) : createUser,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['list-users'] })
+      queryClient.invalidateQueries({
+        queryKey: ['list-users', 'get-user', userId],
+      })
     },
   })
 
   async function handleSubmit(data: UserFormSchema) {
     try {
-      await handleCreateUser(data)
+      await handleSaveUser(data)
       navigate('/users')
     } catch {
-      toast.error('Ocorreu um erro ao criar o usuário')
+      toast.error(
+        'Ocorreu um erro ao salvar o usuário. Vefifique se o e-mail já está em uso.'
+      )
     }
   }
 
@@ -158,52 +163,13 @@ export function UserForm() {
                   <Loader2 className="size-4 animate-spin" />
                 ) : (
                   <>
-                    <Plus className="size-4" />
-                    Criar Usuário
+                    <Save className="size-4" />
+                    Salvar
                   </>
                 )}
               </Button>
             </div>
           </div>
-          {/* <div className="grid gap-6">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>E-mail</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="email@example.com"
-                      type="email"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Senha</FormLabel>
-                  <FormControl>
-                    <Input type="password" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button className="w-full cursor-pointer" type="submit">
-              {form.formState.isSubmitting ? (
-                <Loader2 className="size-4 animate-spin" />
-              ) : (
-                'Entrar'
-              )}
-            </Button>
-          </div> */}
         </div>
       </form>
     </Form>

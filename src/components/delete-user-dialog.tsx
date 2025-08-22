@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import type { ReactNode } from 'react'
-import { redirect, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { deleteUser } from '@/http/users/delete-user'
 import { queryClient } from '@/lib/query-client'
 import type { User } from '@/types/user'

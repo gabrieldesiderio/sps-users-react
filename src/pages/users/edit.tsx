@@ -1,4 +1,5 @@
 import { Navigate, useParams } from 'react-router-dom'
+import { EditUser } from '@/components/edit-user'
 
 type Params = {
   userId: string
@@ -11,5 +12,5 @@ export function EditUserPage() {
     return <Navigate replace to="not-found" />
   }
 
-  return <h1>Edit user</h1>
+  return <EditUser userId={userId} />
 }

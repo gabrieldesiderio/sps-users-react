@@ -9,7 +9,7 @@ type GetUserByIdResponse = {
   user: User
 }
 
-export async function GetUserById({ userId }: GetUserByIdRequest) {
+export async function getUserById({ userId }: GetUserByIdRequest) {
   const response = await api.get<GetUserByIdResponse>(`/users/${userId}`)
 
   return response.data

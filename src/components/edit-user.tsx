@@ -1,5 +1,6 @@
+import { useQuery } from '@tanstack/react-query'
 import { ArrowLeft } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import { UserForm } from '@/components/forms/user'
 import { Button } from '@/components/ui/button'
 import {
@@ -10,8 +11,27 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
+import { getUserById } from '@/http/users/get-user-by-id'
+import { Loading } from './loading'
 
-export function CreateUserPage() {
+type EditUserProps = {
+  userId: string
+}
+
+export function EditUser({ userId }: EditUserProps) {
+  const { data, isLoading } = useQuery({
+    queryFn: () => getUserById({ userId }),
+    queryKey: ['get-user', userId],
+  })
+
+  if (isLoading) {
+    return <Loading />
+  }
+
+  if (!data) {
+    return <Navigate replace to="not-found" />
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b bg-card">
@@ -26,28 +46,27 @@ export function CreateUserPage() {
             <Separator className="h-6" orientation="vertical" />
             <div>
               <h1 className="font-bold text-2xl text-foreground">
-                Novo Usuário
+                Editar Usuário
               </h1>
               <p className="text-muted-foreground text-sm">
-                Adicione um novo usuário ao sistema
+                Altere informaçoes de um usuário do sistema
               </p>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         <div className="mx-auto max-w-2xl">
           <Card>
             <CardHeader>
               <CardTitle>Informações do Usuário</CardTitle>
               <CardDescription>
-                Preencha os dados para criar um novo usuário
+                Atualize as informações do usuário
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <UserForm />
+              <UserForm initialValues={data.user} userId={userId} />
             </CardContent>
           </Card>
         </div>

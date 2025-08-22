@@ -22,7 +22,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { GetUserById } from '@/http/users/get-user-by-id'
+import { getUserById } from '@/http/users/get-user-by-id'
 import { formatDate } from '@/utils/date'
 import { getInitials } from '@/utils/get-initials'
 
@@ -32,7 +32,7 @@ type UserDetailsProps = {
 
 export default function UserDetails({ userId }: UserDetailsProps) {
   const { data, isLoading } = useQuery({
-    queryFn: () => GetUserById({ userId }),
+    queryFn: () => getUserById({ userId }),
     queryKey: ['get-user', userId],
   })
 
@@ -68,7 +68,7 @@ export default function UserDetails({ userId }: UserDetailsProps) {
             </div>
             <div className="flex items-center gap-2">
               <Button asChild variant="outline">
-                <Link to={`/user/${userId}/edit`}>
+                <Link to={`/users/${userId}/edit`}>
                   <Edit className="size-4" />
                   Editar
                 </Link>
