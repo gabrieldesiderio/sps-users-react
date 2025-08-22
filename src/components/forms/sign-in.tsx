@@ -1,18 +1,18 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
-import { Loader2 } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
-import { z } from 'zod';
-import { Button } from '@/components/ui/button';
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
+import { Loader2 } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
+import { z } from 'zod'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from '@/components/ui/card'
 import {
   Form,
   FormControl,
@@ -20,21 +20,21 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Separator } from '@/components/ui/separator';
-import { signIn } from '@/http/auth/sign-in';
-import { queryClient } from '@/lib/query-client';
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Separator } from '@/components/ui/separator'
+import { signIn } from '@/http/auth/sign-in'
+import { queryClient } from '@/lib/query-client'
 
 const formSchema = z.object({
   email: z.email(),
   password: z.string().nonempty(),
-});
+})
 
-type SignInFormSchema = z.infer<typeof formSchema>;
+type SignInFormSchema = z.infer<typeof formSchema>
 
 export function SignInForm() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const form = useForm<SignInFormSchema>({
     resolver: zodResolver(formSchema),
@@ -42,21 +42,21 @@ export function SignInForm() {
       email: '',
       password: '',
     },
-  });
+  })
 
   const { mutateAsync: authenticate } = useMutation({
     mutationFn: signIn,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['profile'] });
+      queryClient.invalidateQueries({ queryKey: ['profile'] })
     },
-  });
+  })
 
   async function handleSignIn({ email, password }: SignInFormSchema) {
     try {
-      await authenticate({ email, password });
-      navigate('/users');
+      await authenticate({ email, password })
+      navigate('/users')
     } catch {
-      toast.error('Credenciais inválidas');
+      toast.error('Credenciais inválidas')
     }
   }
 
@@ -120,5 +120,5 @@ export function SignInForm() {
         Todos os direitos reservados
       </div>
     </div>
-  );
+  )
 }

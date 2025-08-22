@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { Eye, Loader2, MoreHorizontal, Pen, Trash2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import {
@@ -29,7 +29,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { deleteUser } from '@/http/users/delete-user'
 import { listUsers } from '@/http/users/list-users'
+import { queryClient } from '@/lib/query-client'
 import { formatDate } from '@/utils/date'
 import { getInitials } from '@/utils/get-initials'
 
@@ -39,15 +41,19 @@ export function UsersList() {
     queryKey: ['list-users'],
   })
 
-  const handleDelete = (userId: string, userName: string) => {
-    // biome-ignore lint/suspicious/noConsole: <explanation>
-    console.log('delete user', userId, userName)
-  }
+  const { mutateAsync: handleDeleteUser } = useMutation({
+    mutationFn: deleteUser,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['list-users'] })
+    },
+  })
 
   if (isLoading) {
-    ;<div className="flex flex-1 items-center justify-center">
-      <Loader2 className="size-7 animate-spin" />
-    </div>
+    return (
+      <div className="flex flex-1 items-center justify-center">
+        <Loader2 className="size-7 animate-spin" />
+      </div>
+    )
   }
 
   return (
@@ -128,7 +134,9 @@ export function UsersList() {
                             <AlertDialogCancel>Cancelar</AlertDialogCancel>
                             <AlertDialogAction
                               className="cursor-pointer bg-destructive hover:bg-destructive/70"
-                              onClick={() => handleDelete(user.id, user.name)}
+                              onClick={() =>
+                                handleDeleteUser({ userId: user.id })
+                              }
                             >
                               Excluir
                             </AlertDialogAction>
