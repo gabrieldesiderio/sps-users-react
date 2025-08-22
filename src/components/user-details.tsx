@@ -25,6 +25,7 @@ import { Separator } from '@/components/ui/separator'
 import { getUserById } from '@/http/users/get-user-by-id'
 import { formatDate } from '@/utils/date'
 import { getInitials } from '@/utils/get-initials'
+import { LogoutButton } from './logout-button'
 
 type UserDetailsProps = {
   userId: string
@@ -79,6 +80,7 @@ export default function UserDetails({ userId }: UserDetailsProps) {
                   Excluir
                 </Button>
               </DeleteUserDialog>
+              <LogoutButton />
             </div>
           </div>
         </div>

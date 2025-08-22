@@ -13,6 +13,7 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { getUserById } from '@/http/users/get-user-by-id'
 import { Loading } from './loading'
+import { LogoutButton } from './logout-button'
 
 type EditUserProps = {
   userId: string
@@ -35,7 +36,7 @@ export function EditUser({ userId }: EditUserProps) {
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b bg-card">
-        <div className="container mx-auto px-4 py-6">
+        <div className="container mx-auto flex flex-col-reverse px-4 py-6 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
             <Button asChild size="sm" variant="ghost">
               <Link to="/users">
@@ -53,6 +54,7 @@ export function EditUser({ userId }: EditUserProps) {
               </p>
             </div>
           </div>
+          <LogoutButton />
         </div>
       </header>
 

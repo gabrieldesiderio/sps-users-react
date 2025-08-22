@@ -2,8 +2,6 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { queryClient } from '@/lib/query-client'
 import { ProtectedRoute } from '../components/protected-route'
-import { AppLayout } from './_layouts/app'
-import { DashboardLayout } from './_layouts/dashboard'
 import { SignIn } from './auth/sign-in'
 import { NotFoundPage } from './not-found'
 import { CreateUserPage } from './users/create'
@@ -13,36 +11,58 @@ import { UsersListPage } from './users/list'
 
 export function AppRoutes() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Routes>
-          <Route
-            element={
-              <ProtectedRoute redirectIfAuthenticated="/users">
-                <AppLayout />
-              </ProtectedRoute>
-            }
-          >
-            <Route element={<SignIn />} index />
-          </Route>
+    <main className="antialised min-h-screen bg-background">
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <Routes>
+            <Route
+              element={
+                <ProtectedRoute redirectIfAuthenticated="/users">
+                  <SignIn />
+                </ProtectedRoute>
+              }
+              index
+            />
 
-          <Route
-            element={
-              <ProtectedRoute>
-                <DashboardLayout />
-              </ProtectedRoute>
-            }
-            path="users"
-          >
-            <Route element={<UsersListPage />} index />
-            <Route element={<CreateUserPage />} path="create" />
-            <Route element={<EditUserPage />} path=":userId/edit" />
-            <Route element={<UserDetailsPage />} path=":userId" />
-          </Route>
+            <Route path="users">
+              <Route
+                element={
+                  <ProtectedRoute>
+                    <UsersListPage />
+                  </ProtectedRoute>
+                }
+                index
+              />
+              <Route
+                element={
+                  <ProtectedRoute>
+                    <CreateUserPage />
+                  </ProtectedRoute>
+                }
+                path="create"
+              />
+              <Route
+                element={
+                  <ProtectedRoute>
+                    <EditUserPage />
+                  </ProtectedRoute>
+                }
+                path=":userId/edit"
+              />
+              <Route
+                element={
+                  <ProtectedRoute>
+                    <UserDetailsPage />
+                  </ProtectedRoute>
+                }
+                path=":userId"
+              />
+            </Route>
 
-          <Route element={<NotFoundPage />} path="*" />
-        </Routes>
-      </BrowserRouter>
-    </QueryClientProvider>
+            <Route element={<NotFoundPage />} path="*" />
+          </Routes>
+        </BrowserRouter>
+      </QueryClientProvider>
+    </main>
   )
 }

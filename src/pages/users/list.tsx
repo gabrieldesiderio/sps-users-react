@@ -1,5 +1,6 @@
 import { Plus, Users } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { LogoutButton } from '@/components/logout-button'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -29,12 +30,15 @@ export function UsersListPage() {
                 </p>
               </div>
             </div>
-            <Button asChild className="gap-2">
-              <Link to="/users/create">
-                <Plus className="h-4 w-4" />
-                Novo Usuário
-              </Link>
-            </Button>
+            <div className="flex flex-col-reverse items-end gap-2 sm:flex-row">
+              <Button asChild className="gap-2">
+                <Link to="/users/create">
+                  <Plus className="h-4 w-4" />
+                  Novo Usuário
+                </Link>
+              </Button>
+              <LogoutButton />
+            </div>
           </div>
         </div>
       </header>
